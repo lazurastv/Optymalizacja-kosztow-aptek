@@ -1,0 +1,121 @@
+\documentclass{article}
+
+\usepackage{polski}
+\usepackage{dirtree}
+
+\title{Specyfikacja Funkcjonalna}
+\date{07.11.2020}
+\author{Dominik Wawrzyniuk}
+
+\begin{document}
+
+\maketitle
+
+\section{Opis ogólny}
+
+Nazwa programu to OLKA, co jest skrótem od Optymalizacja Leków i Kosztów Aptek. Zadaniem tego programu jest znalezienie konfiguracji zakupów u różnych dostawców takiej, że łączny koszt jest najmniejszy, a zapotrzebowanie wszystkich aptek jest spełnione. Program dedykowany jest dla grupy menadżerskiej sieci aptek.
+
+\section{Opis funkcjonalności}
+
+Program uruchamia się poprzez plik .exe. Należy wywołać go, podając jako parametr ścieżkę do pliku wejściowego.
+
+\paragraph{}
+
+Program będzie potrafił:
+
+\begin{itemize}
+	\item Odczytać dane z podanego pliku
+	\item Wykryć błędy w pliku wejściowym
+	\item Znaleźć optymalną konfigurację zakupów
+	\item Zapisać znalezioną konfigurację do pliku wynikowego
+\end{itemize}
+
+\section{Format danych i struktura plików}
+
+Główny folder projektu będzie nazywać się OLKA. 
+Wszystkie pliki związane z programem znajdują się w tym folderze. Będzie on zawierał trzy foldery: folder z zaimplementowanym algorytmem, folder z modułem sterującym programem oraz folder z plikiem wyjściowym. W folderze OLKA będzie znajdować się plik .exe.
+Na następnej stronie znajduje się model struktury katalogów.
+
+\newpage
+
+\dirtree{%
+	.1 OLKA.
+	.2 Algorytm.
+	.2 Moduł główny.
+	.2 Plik wyjściowy.
+}
+
+\paragraph{}
+
+Wymaganym plikiem wejściowym jest plik tekstowy zawierający informacje dotyczące:
+
+\begin{itemize}
+	\item maksymalnej produkcji leków przez dostawców
+	\item zapotrzebowania leków przez apteki
+	\item umowy między poszczególnymi dostawcami i aptekami (maksymalna dostawa, cena za sztukę)
+\end{itemize}
+
+Dane te muszą być podane dokładnie wg. następującego schematu: \newline
+
+\noindent
+\#  Producenci szczepionek (id $|$ nazwa $|$ dzienna produkcja) \newline
+0 $|$ BioTech 2.0 $|$ 900 \newline
+... \newline
+\# Apteki (id $|$ nazwa $|$ dzienne zapotrzebowanie) \newline
+0 $|$ CentMedEko Centrala $|$ 450 \newline
+... \newline
+\# Połączenia producentów i aptek (id producenta $|$ id apteki $|$ dzienna maksymalna liczba dostarczanych szczepionek $|$ koszt szczepionki [zł] ) \newline
+0 $|$ 0 $|$ 800 $|$ 70.5 \newline
+...
+
+\paragraph{}
+
+Pliki nie dostosowane do tego formatu nie zostaną przyjęte.
+
+\paragraph{}
+
+Program będzie przechowywać dane wczytane z pliku w tablicach, wskaźnikach i macierzach.
+
+\paragraph{}
+
+Jako plik wyjściowy program zwróci plik tekstowy zawierający informacje dotyczące ile dana apteka ma kupić u danego dostawcy. Jeżeli apteka nie kupuje u danego dostawcy, handel ten nie będzie wymieniony w pliku.
+
+\section{Scenariusz działania programu}
+
+Scenariusz z punktu widzenia użytkownika:
+
+\begin{enumerate}
+	\item Uruchamiamy program plikiem .exe., podając jako parametr ścieżkę do naszego pliku wejściowego.
+	\item Jeżeli wystąpi błąd, program go zgłosi i zakończy działanie. Należy błąd naprawić żeby program poprawnie zadziałał.
+	\item Program umieści plik wyjściowy w przeznaczonym do tego folderze.
+\end{enumerate}
+
+\newpage
+
+\noindent Scenariusz z punktu widzenia programu:
+
+\begin{enumerate}
+	\item Program zostaje wywołany.
+	\item Moduł główny sprawdza wystąpienie któregoś z następujących błędów:
+	\begin{enumerate}
+		\item Brak pliku wejściowego.
+		\item Niepoprawny rodzaj pliku wejściowego (nie plik tekstowy).
+		\item Nieprzyjmowany format zapisu danych w pliku.
+		\item Niekompletny plik wejściowy (brak niektórych wartości).
+		\item Niepoprawne dane w pliku (liczby ujemne, niecałkowite dostawy leków).
+		\item Sprzeczności danych w pliku (odwołanie do dostawcy/apteki która nie istnieje).
+	\end{enumerate}
+	\item Jeżeli wystąpił błąd, program go zgłasza i kończy działanie.
+	\item Moduł główny zapisuje dane z pliku wejściowego w macierzy przyjmowanej przez algorytm.
+	\item Moduł główny przekazuje dane algorytmowi.
+	\item Algorytm oblicza optymalne rozwiązanie dla danych wejściowych i przekazuje je modułowi.
+	\item Moduł zapisuje dane w pliku wyjściowym i program kończy swoje działanie.
+\end{enumerate}
+
+Program nie posiada graficznego interfejsu użytkownika (GUI). 
+
+\section{Testowanie}
+
+Moduł główny zostanie przetestowany pod względem wszystkich błędów, które mogłyby wystąpić podczas wczytywania danych wejściowych, oraz pod względem poprawnego przekazywania danych. Algorytm zostanie przetestowany na kilku przykładach, a optymalność jego rozwiązań zostanie porównana z optymalnym rozwiązaniem znalezionym przeze mnie.
+
+\end{document}
