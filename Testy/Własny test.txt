@@ -1,0 +1,18 @@
+# Producenci szczepionek (id | nazwa | dzienna produkcja)
+0 | Lekomaniak | 700
+1 | D¯INGIEL | 650
+# Apteki (id | nazwa | dzienne zapotrzebowanie)
+0 | NBB==Market | 700
+1 | Eurogel | 200
+# Po³¹czenia producentów i aptek (id producenta | id apteki | dzienna maksymalna liczba dostarczanych szczepionek | koszt szczepionki [z³] )
+0 | 0 | 700 | 32.0
+0 | 1 | 100 | 40.0
+1 | 0 | 248 | 35.67
+1 | 1 | 620 | 45.8
+
+Optymalny wynik:
+0 - 0 : 600 = 19200
+0 - 1 : 100 = 4000
+1 - 0 : 100 = 3567
+1 - 1 : 100 = 4580
+Suma = 31347
