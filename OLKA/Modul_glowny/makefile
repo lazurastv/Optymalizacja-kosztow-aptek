@@ -1,2 +1,2 @@
-modul: main.cpp
+modul: main.cpp main.h
 	g++ main.cpp -o "modul"

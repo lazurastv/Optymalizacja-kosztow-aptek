@@ -17,6 +17,12 @@ struct ret_array {
 	int amount = 0;
 };
 
+std::string getFileName(int, char**);
+
+std::ifstream getFile(std::string);
+
+bool fileExists(std::ifstream&);
+
 ret_array getBuildingData(std::ifstream&, std::string);
 
 #endif
