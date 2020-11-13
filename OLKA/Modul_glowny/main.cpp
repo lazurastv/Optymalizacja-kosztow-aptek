@@ -2,63 +2,81 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
-#include <locale.h>
 #include "main.h"
 
-ret_array getBuildingData(std::ifstream& input_file, std::string expected_line) {
+buildings_with_size getBuildingData(std::ifstream& input_file, std::string expected_line, int start) {
 	std::string read_line;
 	building tmp[100];
 	int i = 0;
+	std::string cut[3];
 	while (getline(input_file, read_line) && read_line != expected_line) {
 		std::stringstream scan_line(read_line);
-		getline(scan_line, read_line, '|');
-		try {
-			tmp[i].ID = stoi(read_line);
-		} catch (std::invalid_argument err) {
-			std::stringstream ss;
-			ss << "W linijce \"";
-		        ss << scan_line.str();
-		        ss << "\" wartoœæ \"";
-		        ss << read_line;
-		        ss << "\" nie jest poprawnym identyfikatorem! Musi byæ liczba naturalna lub 0.\n";
-			throw std::runtime_error(ss.str());
+		for (int j = 0; j < 3; j++) {
+			if (!getline(scan_line, cut[j], '|')) {
+				std::stringstream ss;
+				ss << "Linijka " << start + i << ": ";
+				ss << "ma za ma³¹ iloœæ danych!\n";
+				throw std::runtime_error(ss.str());
+			}
 		}
-		getline(scan_line, read_line, '|');
 		try {
-			tmp[i].name = read_line;
+			tmp[i].count = stoi(cut[0]);
+			if (tmp[i].count < 0) {
+				throw std::invalid_argument("");
+			}
+		} catch (std::invalid_argument err) {
+			try {
+				float test = stof(cut[0]);
+			} catch (std::invalid_argument err) {
+				std::stringstream ss;
+				ss << "Linijka " << start + i << ": ";
+				ss << "\"" << cut[0] << "\" powinno byæ liczb¹ naturaln¹ LUB\n";
+				ss << "\"" << read_line << "\" powinno byæ ";
+				ss << "\"" << expected_line << "\"!\n";
+				throw std::runtime_error(ss.str());
+			}
+			std::stringstream ss;
+			ss << "Linijka " << start + i << ": ";
+			ss << cut[2] << " nie jest liczb¹ naturaln¹!\n";
+			throw std::runtime_error(ss.str());
+		} catch (std::runtime_error err) {
+			throw err;
+		}
+		try {
+			tmp[i].name = cut[1];
 		} catch (std::length_error) {
 			std::stringstream ss;
-			ss << "Nazwa w linijce ";
-			ss << i + 2;
-		        ss << " jest zbyt d³uga!\n";
+			ss << "Linijka " << start + i << ": ";
+		    ss << "Nazwa jest zbyt d³uga!\n";
 			throw std::runtime_error(ss.str());
 		}
-		if (!getline(scan_line, read_line, '|')) {
-			throw std::runtime_error("\"" + scan_line.str() + "\" ma za ma³¹ iloœæ danych!\n");
-		}
 		try {
-			tmp[i].count = stoi(read_line);
-		} catch (std::invalid_argument) {
-			throw std::runtime_error("W linijce \"" + scan_line.str() + "\" wartoœæ \"" + read_line + "\" nie jest poprawn¹ iloœci¹ leków! Musi byæ naturalna lub 0.\n");
+			tmp[i].count = stoi(cut[2]);
+			if (tmp[i].count < 0) {
+				throw std::invalid_argument("");
+			}
+		} catch (std::invalid_argument err) {
+			std::stringstream ss;
+			ss << "Linijka " << start + i << ": ";
+			ss << cut[2] << " nie jest liczb¹ naturaln¹!\n";
+			throw std::runtime_error(ss.str());
 		}
 		i++;
 	}
 	if (read_line != expected_line) {
 		std::stringstream ss;
-		ss << "Brak linii ";
-		ss << expected_line;
-		ss << " w pliku! Powinna byæ na ";
-	        ss << i + 2;
-		ss << " linijce.\n";
+		ss << "Linijka " << start + i << ": ";
+		ss << "Powinno byæ \"" << expected_line << "\" ";
+		ss << ", a jest \"" << read_line << "\"!\n";
 		throw std::runtime_error(ss.str());
 	}
-	building builds[i];
+	building buildings[i];
 	for (int j = 0; j < i; j++) {
-		builds[j] = tmp[j];
+		buildings[j] = tmp[j];
 	}
-	ret_array ret;
-	ret.builds = builds;
-	ret.amount = i;
+	buildings_with_size ret;
+	ret.buildings = buildings;
+	ret.size = i;
 	return ret;
 }
 
@@ -88,7 +106,7 @@ void checkFirstLine(std::ifstream& in) {
 	getline(in, read_line);
 	
 	if (read_line != expected_line) {
-		throw std::runtime_error("Plik nie spe³nia wymogów szablonu! Pierwsza linijka powinna byæ :\"" + expected_line + "\", a jest: \"" + read_line + "\"!\n");
+		throw std::runtime_error("Linijka 1: Powinno byæ :\"" + expected_line + "\", a jest: \"" + read_line + "\"!\n");
 	}
 }
 
@@ -98,7 +116,6 @@ bool fileExists(std::ifstream& file) {
 
 int main(int argc, char** argv) {
 	using namespace std;
-	setlocale(LC_CTYPE, "Polish");
 
 	string input_string;
 
@@ -125,27 +142,23 @@ int main(int argc, char** argv) {
 	}
 	
 	string expected_line = "# Apteki (id | nazwa | dzienne zapotrzebowanie)";
-	ret_array factories;
+	buildings_with_size factories;
 	
 	try {
-		factories = getBuildingData(input_file, expected_line);
+		factories = getBuildingData(input_file, expected_line, 3);
 	} catch (runtime_error err) {
 		cerr << err.what();
 		return 4;
 	}
 	
 	expected_line = "# Po³¹czenia producentów i aptek (id producenta | id apteki | dzienna maksymalna liczba dostarczanych szczepionek | koszt szczepionki [z³] )";
-	ret_array pharmacies;
+	buildings_with_size pharmacies;
 	
 	try {
-		pharmacies = getBuildingData(input_file, expected_line);
-	} catch (int err) {
-		cerr << "Plik nie spelnia wymogow szablonu!";
-		cerr << " Linijka poprzedzajaca handle powinna byc: \"" << expected_line << "\"\n";
-		return 6;
-	} catch (std::invalid_argument) {
-		cerr << "Wartosci w pliku sa niepoprawne albo ich nie ma!\n";
-		return 7;
+		pharmacies = getBuildingData(input_file, expected_line, factories.size + 3);
+	} catch (std::runtime_error err) {
+		cerr << err.what();
+		return 5;
 	}
 	
 	input_file.close();

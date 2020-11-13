@@ -12,9 +12,9 @@ struct deal {
 	float price;
 };
 
-struct ret_array {
-	building* builds;
-	int amount = 0;
+struct buildings_with_size {
+	building* buildings;
+	int size = 0;
 };
 
 std::string getFileName(int, char**);
@@ -23,6 +23,6 @@ std::ifstream getFile(std::string);
 
 bool fileExists(std::ifstream&);
 
-ret_array getBuildingData(std::ifstream&, std::string);
+buildings_with_size getBuildingData(std::ifstream&, std::string, int);
 
 #endif
