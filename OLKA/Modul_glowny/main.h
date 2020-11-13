@@ -1,5 +1,5 @@
-#ifndef _MAIN_H
-#define _MAIN_H
+#ifndef _MAIN_H_
+#define _MAIN_H_
 
 struct building {
 	int ID;
@@ -22,6 +22,8 @@ std::string getFileName(int, char**);
 std::ifstream getFile(std::string);
 
 bool fileExists(std::ifstream&);
+
+bool isNatural(float);
 
 buildings_with_size getBuildingData(std::ifstream&, std::string, int);
 
