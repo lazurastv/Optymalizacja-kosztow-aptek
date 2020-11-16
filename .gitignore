@@ -1,4 +1,5 @@
 *~
 *.exe
-*.tex
 *.txt
+*.pdf
+*.gz
