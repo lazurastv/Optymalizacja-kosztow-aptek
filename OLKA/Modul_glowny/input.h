@@ -7,7 +7,9 @@ struct budynek {
 	int ID;
 	std::string nazwa;
 	int wymog;
-	bool operator > (budynek);
+	bool operator < (budynek);
+	budynek(std::string*);
+	budynek();
 };
 
 struct handel {
@@ -15,7 +17,9 @@ struct handel {
 	int ID_apteki;
 	int limit;
 	float koszt;
-	bool operator > (handel);
+	bool operator < (handel);
+	handel(std::string*);
+	handel();
 };
 
 struct input {
@@ -25,5 +29,13 @@ struct input {
 	int ile_aptek;
 	handel* handle;
 };
+
+int naturalna(std::string);
+
+float numeryczna(std::string);
+
+bool nieOdpowiedniaPrecyzja(std::string);
+
+std::string usunSpacje(std::string);
 
 #endif

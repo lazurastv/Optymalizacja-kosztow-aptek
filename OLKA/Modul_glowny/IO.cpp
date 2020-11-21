@@ -1,48 +1,22 @@
-#include <iostream>
 #include <fstream>
 #include <sstream>
-#include <stdexcept>
 #include <string>
+#include <algorithm>
 #include "IO.h"
 #include "input.h"
 
-main() {
-	try {
-		Czytnik cz = Czytnik("W³asny test.txt");
-		input out = cz.wczytajDane();
-		std::cout << out.ile_fabryk << " " << out.ile_aptek << std::endl;
-		for (int i = 0; i < 2; i++) {
-			std::cout << out.fabryki[i].nazwa << "\n";
-		}
-		for (int i = 0; i < 3; i++) {
-			std::cout << out.apteki[i].nazwa << "\n";
-		}
-		for (int i = 0; i < 6; i++) {
-			std::cout << out.handle[i].koszt << " ";
-		}
-		delete[] (out.fabryki);
-		delete[] (out.apteki);
-		delete[] (out.handle);
-	} catch (std::exception& err) {
-		std::cerr << err.what();
-	}
-}
-
 Czytnik::Czytnik (const char* in) {
 	sciezka = std::string(in);
-	przygotujPlik();
+	sprawdzPlik();
 	sprawdzTytul();
 	czytajBudynki(0);
 	czytajBudynki(1);
 	czytajHandle();
+	sprawdzID();
 	plik.close();
 }
 
-input Czytnik::wczytajDane() {
-	return dane;
-}
-
-void Czytnik::przygotujPlik() {
+void Czytnik::sprawdzPlik() {
 	if (!plikJestTekstowy()) {
 		throw std::runtime_error("Plik \"" + sciezka + "\" nie jest tekstowy!\n");
 	}
@@ -61,13 +35,25 @@ void Czytnik::sprawdzTytul() {
 	linijka++;
 }
 
-bool Czytnik::plikJestTekstowy() {
-	int len = sciezka.length();
-	return len > 3 && sciezka.substr(len - 4, 4) == ".txt";
-}
-
-bool Czytnik::plikIstnieje() {
-	return plik.good() && plik.is_open();
+void Czytnik::sprawdzID() {
+	for (int i = 0; i < dane.ile_fabryk - 1; i++) {
+		if (dane.fabryki[i].ID == dane.fabryki[i + 1].ID) {
+			throw std::runtime_error(dane.fabryki[i].nazwa + " oraz " + dane.fabryki[i + 1].nazwa + " maja ten sam identyfikator!\n");
+		}
+	}
+	for (int i = 0; i < dane.ile_aptek - 1; i++) {
+		if (dane.apteki[i].ID == dane.apteki[i + 1].ID) {
+			throw std::runtime_error(dane.apteki[i].nazwa + " oraz " + dane.apteki[i + 1].nazwa + " maja ten sam identyfikator!\n");
+		}
+	}
+	for (int i = 0; i < dane.ile_fabryk; i++) {
+		for (int j = 0; j < dane.ile_aptek; j++) {
+			handel handel = dane.handle[i * dane.ile_aptek + j];
+			if (handel.ID_fabryki != dane.fabryki[i].ID || handel.ID_apteki != dane.apteki[j].ID) {
+				throw std::runtime_error("Brakuje danych dotyczacych handlu miedzy " + dane.fabryki[i].nazwa + " i " + dane.apteki[j].nazwa + "!\n");
+			}
+		}
+	}
 }
 
 void Czytnik::czytajBudynki(int n) {
@@ -77,7 +63,11 @@ void Czytnik::czytajBudynki(int n) {
 	std::string bufor;
 	while (getline(plik, bufor) && bufor != tytul[n + 1]) {
 		czytajLinijke(bufor, cut, 3);
-		tmp[ile++] = stworzBudynek(cut);
+		try {
+			tmp[ile++] = budynek(cut);
+		} catch (std::runtime_error err) {
+			throw bladLinia(err.what());
+		}
 		linijka++;
 	}
 	linijka++;
@@ -91,6 +81,7 @@ void Czytnik::czytajBudynki(int n) {
 				dane.fabryki[i] = tmp[i];
 			}
 			dane.ile_fabryk = ile;
+			std::sort(dane.fabryki, dane.fabryki + ile);
 			break;
 		case 1:
 			dane.apteki = new budynek[ile];
@@ -98,6 +89,7 @@ void Czytnik::czytajBudynki(int n) {
 				dane.apteki[i] = tmp[i];
 			}
 			dane.ile_aptek = ile;
+			std::sort(dane.apteki, dane.apteki + ile);
 	}
 }
 
@@ -107,74 +99,53 @@ void Czytnik::czytajHandle() {
 	std::string cut[4];
 	int ile = 0;
 	std::string bufor;
-	while (getline(plik, bufor) && ile < size) {
+	while (getline(plik, bufor) && ile <= size) {
 		czytajLinijke(bufor, cut, 4);
-		tmp[ile++] = stworzHandel(cut);
+		try {
+			tmp[ile++] = handel(cut);
+		} catch (std::runtime_error err) {
+			throw bladLinia(err.what());
+		}
 		linijka++;
 	}
 	linijka++;
-	if (ile < size) {
+	if (ile != size) {
 		throw std::runtime_error("Handli powinno byc " + std::to_string(size) + ", a jest " + std::to_string(ile) + "!\n");
 	}
 	dane.handle = new handel[ile];
 	for (int i = 0; i < ile; i++) {
 		dane.handle[i] = tmp[i];
 	}
+	std::sort(dane.handle, dane.handle + dane.ile_fabryk * dane.ile_aptek);
 }
 
 void Czytnik::czytajLinijke(std::string bufor, std::string* cut, int ile) {
 	std::stringstream skaner(bufor);
 	for (int i = 0; i < ile; i++) {
-		if (!getline(skaner, cut[i], '|')) {
+		if (!getline(skaner, cut[i], '|') || jestPusty(cut[i])) {
 			throw bladLinia("Brakuje informacji!\n");
 		}
 	}
 }
 
-budynek Czytnik::stworzBudynek(std::string in[3]) {
-	budynek tmp;
-	tmp.ID = naturalna(in[0]);
-	if (in[1].length() > 1000) {
-		throw bladLinia("Nazwa jest zbyt dluga!\n");
-	}
-	tmp.nazwa = in[1];
-	tmp.wymog = naturalna(in[2]);
-	return tmp;
-}
-
-handel Czytnik::stworzHandel(std::string in[4]) {
-	handel tmp;
-	tmp.ID_fabryki = naturalna(in[0]);
-	tmp.ID_apteki = naturalna(in[1]);
-	tmp.limit = naturalna(in[2]);
-	tmp.koszt = numeryczna(in[3]);
-	return tmp;
-}
-
-int Czytnik::naturalna(std::string liczba) {
-	try {
-		int n = stoi(liczba);
-		if (n < 0) {
-			throw std::invalid_argument("");
-		}
-		return n;
-	} catch (std::invalid_argument err) {
-		throw bladLinia("\"" + liczba + "\" nie jest liczba naturalna!\n");
-	}
-}
-
-float Czytnik::numeryczna(std::string liczba) {
-	try {
-		float n = stof(liczba);
-		if (n < 0) {
-			throw std::invalid_argument("");
-		}
-		return n;
-	} catch (std::invalid_argument err) {
-		throw bladLinia("\"" + liczba + "\" nie jest dodatnia liczba o precyzji do drugiego miejsca po przecinku!");
-	}
-}
-
 std::runtime_error Czytnik::bladLinia(const std::string in) {
 	return std::runtime_error("Linijka " + std::to_string(linijka) + ": " + in);
+}
+
+bool Czytnik::plikJestTekstowy() {
+	int len = sciezka.length();
+	return len > 3 && sciezka.substr(len - 4, 4) == ".txt";
+}
+
+bool Czytnik::plikIstnieje() {
+	return plik.good() && plik.is_open();
+}
+
+bool jestPusty(std::string in) {
+	for (char c : in) {
+		if (c > ' ') {
+			return false;
+		}
+	}
+	return true;
 }
