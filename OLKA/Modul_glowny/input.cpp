@@ -1,5 +1,6 @@
-#include "input.h"
 #include <iostream>
+#include <string>
+#include "input.h"
 
 bool budynek::operator > (budynek a) {
 	return ID > a.ID;

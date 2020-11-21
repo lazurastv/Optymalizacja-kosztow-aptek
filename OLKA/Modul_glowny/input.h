@@ -1,9 +1,11 @@
+#include <string>
+
 #ifndef _INPUT_H_
 #define _INPUT_H_
 
 struct budynek {
 	int ID;
-	const char* nazwa;
+	std::string nazwa;
 	int wymog;
 	bool operator > (budynek);
 };
