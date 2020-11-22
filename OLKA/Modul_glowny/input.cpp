@@ -9,7 +9,7 @@ bool budynek::operator < (budynek a) {
 budynek::budynek(std::string in[3]) {
 	ID = naturalna(in[0]);
 	if (in[1].length() > 1000) {
-		throw std::runtime_error("Nazwa jest zbyt dluga!\n");
+		throw std::runtime_error("Nazwa musi miec mniej niz 1000 znakow!\n");
 	}
 	nazwa = usunSpacje(in[1]);
 	wymog = naturalna(in[2]);
