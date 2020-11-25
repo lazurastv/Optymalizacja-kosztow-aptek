@@ -6,8 +6,9 @@
 struct graf {
 	int wezly;
 	int** limity;
-	float** koszty;
+	double** koszty;
 	graf(input);
+	graf() {};
 	~graf();
 };
 

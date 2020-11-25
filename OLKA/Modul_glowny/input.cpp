@@ -2,6 +2,8 @@
 #include <string>
 #include "input.h"
 
+#include <iostream>
+
 bool budynek::operator < (budynek a) {
 	return ID < a.ID;
 }
@@ -46,9 +48,9 @@ int naturalna(std::string liczba) {
 	}
 }
 
-float numeryczna(std::string liczba) {
+double numeryczna(std::string liczba) {
 	try {
-		float n = stof(liczba);
+		double n = stod(liczba);
 		if (n < 0 || nieOdpowiedniaPrecyzja(liczba)) {
 			throw std::invalid_argument("");
 		}
@@ -62,9 +64,11 @@ bool nieOdpowiedniaPrecyzja(std::string num) {
 	std::stringstream skaner(num);
 	std::string bufor;
 	getline(skaner, bufor, '.');
-	getline(skaner, bufor);
-	int len = bufor.length();
-	return len > 2;
+	if (getline(skaner, bufor)) {
+		return bufor.length() > 2;
+	} else {
+		return false;
+	}
 }
 
 std::string usunSpacje(std::string nazwa) {

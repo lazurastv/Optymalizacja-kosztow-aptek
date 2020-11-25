@@ -3,6 +3,7 @@
 #include "IO.h"
 #include "../Algorytm/alg.h"
 #include "../Algorytm/graf.h"
+#include "../Algorytm/wynik.h"
 
 int main(int argc, char** argv) {
 	try {
@@ -11,8 +12,13 @@ int main(int argc, char** argv) {
 		}
 		Czytnik cz = Czytnik(argv[1]);
 		input dane = cz.dane;
-		graf g = graf(dane);
-		std::cout << g.wezly << std::endl;
+		/*for (int i = 0; i < dane.ile_fabryk; i++) {
+			std::cout << dane.handle[i].koszt;
+		}*/
+		graf gr(dane);
+		Algorytm algorytm(dane.ile_fabryk, dane.ile_aptek);
+		wynik wk = algorytm.oblicz_wynik(gr);
+		std::cout << std::fixed << wk.suma;
 	} catch (std::exception& err) {
 		std::cout << err.what();
 	}

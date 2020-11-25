@@ -6,8 +6,9 @@
 #include "input.h"
 
 Czytnik::Czytnik (const char* in) {
-	sciezka = std::string(in);
-	sprawdzPlik();
+	std::string sciezka(in);
+	sprawdzPlik(sciezka);
+	plik.open(sciezka);
 	sprawdzTytul();
 	czytajBudynki(0);
 	czytajBudynki(1);
@@ -16,12 +17,11 @@ Czytnik::Czytnik (const char* in) {
 	plik.close();
 }
 
-void Czytnik::sprawdzPlik() {
-	if (!plikJestTekstowy()) {
+void Czytnik::sprawdzPlik(std::string sciezka) {
+	if (!plikJestTekstowy(sciezka)) {
 		throw std::runtime_error("Plik \"" + sciezka + "\" nie jest tekstowy!\n");
 	}
-	plik.open(sciezka);
-	if (!plikIstnieje()) {
+	if (!plikIstnieje(sciezka)) {
 		throw std::runtime_error("Nie znaleziono pliku \"" + sciezka + "\"!\n");
 	}
 }
@@ -29,8 +29,8 @@ void Czytnik::sprawdzPlik() {
 void Czytnik::sprawdzTytul() {
 	std::string bufor;
 	getline(plik, bufor);
-	if (bufor != tytul[0]) {
-		throw bladLinia("Powinna byc \"" + tytul[0] + "\", a jest \"" + bufor + "\"!\n");
+	if (bufor != tytul(0)) {
+		throw bladLinia("Powinna byc \"" + tytul(0) + "\", a jest \"" + bufor + "\"!\n");
 	}
 	linijka++;
 }
@@ -61,7 +61,7 @@ void Czytnik::czytajBudynki(int n) {
 	std::string cut[3];
 	int ile = 0;
 	std::string bufor;
-	while (getline(plik, bufor) && bufor != tytul[n + 1]) {
+	while (getline(plik, bufor) && bufor != tytul(n + 1)) {
 		czytajLinijke(bufor, cut, 3);
 		try {
 			tmp[ile++] = budynek(cut);
@@ -71,8 +71,8 @@ void Czytnik::czytajBudynki(int n) {
 		linijka++;
 	}
 	linijka++;
-	if (bufor != tytul[n + 1]) {
-		throw bladLinia("Powinna byc \"" + tytul[n + 1] + "\", a jest \"" + bufor + "\"!\n");
+	if (bufor != tytul(n + 1)) {
+		throw bladLinia("Powinna byc \"" + tytul(n + 1) + "\", a jest \"" + bufor + "\"!\n");
 	}
 	switch (n) {
 		case 0:
@@ -93,6 +93,8 @@ void Czytnik::czytajBudynki(int n) {
 	}
 }
 
+#include <iostream>
+
 void Czytnik::czytajHandle() {
 	int size = dane.ile_fabryk * dane.ile_aptek;
 	handel tmp[size];
@@ -103,6 +105,7 @@ void Czytnik::czytajHandle() {
 		czytajLinijke(bufor, cut, 4);
 		try {
 			tmp[ile++] = handel(cut);
+			//std::cout << tmp[ile - 1].koszt << " ";
 		} catch (std::runtime_error err) {
 			throw bladLinia(err.what());
 		}
@@ -122,7 +125,7 @@ void Czytnik::czytajHandle() {
 void Czytnik::czytajLinijke(std::string bufor, std::string* cut, int ile) {
 	std::stringstream skaner(bufor);
 	for (int i = 0; i < ile; i++) {
-		if (!getline(skaner, cut[i], '|') || jestPusty(cut[i])) {
+		if (!getline(skaner, cut[i], '|') || napisJestPusty(cut[i])) {
 			throw bladLinia("Brakuje informacji!\n");
 		}
 	}
@@ -132,20 +135,35 @@ std::runtime_error Czytnik::bladLinia(const std::string in) {
 	return std::runtime_error("Linijka " + std::to_string(linijka) + ": " + in);
 }
 
-bool Czytnik::plikJestTekstowy() {
+bool plikJestTekstowy(std::string sciezka) {
 	int len = sciezka.length();
 	return len > 3 && sciezka.substr(len - 4, 4) == ".txt";
 }
 
-bool Czytnik::plikIstnieje() {
-	return plik.good() && plik.is_open();
+bool plikIstnieje(std::string sciezka) {
+	std::ifstream plik(sciezka);
+	return plik.good();
 }
 
-bool jestPusty(std::string in) {
+bool napisJestPusty(std::string in) {
 	for (char c : in) {
 		if (c > ' ') {
 			return false;
 		}
 	}
 	return true;
+}
+
+std::string tytul(int n) {
+	switch(n) {
+		case 0:
+			return "# Producenci szczepionek (id | nazwa | dzienna produkcja)";
+		case 1:
+			return "# Apteki (id | nazwa | dzienne zapotrzebowanie)";
+		case 2:
+			return "# Polaczenia producentow i aptek (id producenta | id apteki | "
+					"dzienna maksymalna liczba dostarczanych szczepionek | koszt szczepionki [zl] )";
+		default:
+			return "";
+	}
 }

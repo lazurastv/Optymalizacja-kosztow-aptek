@@ -16,7 +16,7 @@ struct handel {
 	int ID_fabryki;
 	int ID_apteki;
 	int limit;
-	float koszt;
+	double koszt;
 	bool operator < (handel);
 	handel(std::string*);
 	handel();
@@ -32,7 +32,7 @@ struct input {
 
 int naturalna(std::string);
 
-float numeryczna(std::string);
+double numeryczna(std::string);
 
 bool nieOdpowiedniaPrecyzja(std::string);
 
