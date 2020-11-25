@@ -1,6 +1,7 @@
 #include <string>
 #include <fstream>
 #include "input.h"
+#include "../Algorytm/wynik.h"
 
 #ifndef _IO_H_
 #define _IO_H_
@@ -28,5 +29,7 @@ bool plikIstnieje(std::string);
 bool napisJestPusty(std::string);
 
 std::string tytul(int);
+
+void zapiszWynik(input, wynik);
 
 #endif

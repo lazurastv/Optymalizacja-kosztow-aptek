@@ -27,6 +27,8 @@ bool handel::operator < (handel a) {
 	}
 }
 
+#include <iostream>
+
 handel::handel(std::string in[4]) {
 	ID_fabryki = naturalna(in[0]);
 	ID_apteki = naturalna(in[1]);
@@ -80,5 +82,5 @@ std::string usunSpacje(std::string nazwa) {
 	while (nazwa[last] == ' ') {
 		last--;
 	}
-	return nazwa.substr(first, last);
+	return nazwa.substr(first, last + 1);
 }

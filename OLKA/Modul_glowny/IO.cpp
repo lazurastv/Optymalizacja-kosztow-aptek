@@ -105,7 +105,6 @@ void Czytnik::czytajHandle() {
 		czytajLinijke(bufor, cut, 4);
 		try {
 			tmp[ile++] = handel(cut);
-			//std::cout << tmp[ile - 1].koszt << " ";
 		} catch (std::runtime_error err) {
 			throw bladLinia(err.what());
 		}
@@ -166,4 +165,29 @@ std::string tytul(int n) {
 		default:
 			return "";
 	}
+}
+
+void zapiszWynik(input in, wynik w) {
+	using namespace std;
+	ifstream tmp;
+	string title;
+	int t = 0;
+	do {
+		title = "../Plik_wyjsciowy/Wynik_" + to_string(in.ile_fabryk) + "_" + to_string(in.ile_aptek) + "_" + to_string(t++) + ".txt";
+		tmp = ifstream(title);
+	} while (tmp.good());
+	ofstream out;
+	out.open(title);
+	out.precision(15);
+	for (int j = 0; j < in.ile_aptek; j++) {
+		for (int i = 0; i < in.ile_fabryk; i++) {
+			if (w.zakupy[i][j] != 0) {
+				out << in.fabryki[i].nazwa << " -> " << in.apteki[j].nazwa;
+				out << " [Koszt = " << w.zakupy[i][j] << " * " << in.handle[i * in.ile_fabryk + j].koszt;
+				out << " = " << w.koszty[i][j] << " zł]\n";
+			}
+		}
+	}
+	out << "Oplaty calkowite : " << w.suma;
+	out.close();
 }

@@ -41,7 +41,7 @@ Algorytm::~Algorytm() {
 }
 
 wynik Algorytm::oblicz_wynik(const graf& g) {
-	double suma = 0;
+	wynik score(fabryki, apteki);
 	while (bellmanFord(g)) {
         int ile = INF;
 		int w = g.wezly - 1;
@@ -60,18 +60,16 @@ wynik Algorytm::oblicz_wynik(const graf& g) {
 		w = g.wezly - 1;
         while (w != 0) {
 			if (przeplyw[w][poprzednik[w]] != 0) { 
-				przeplyw[w][poprzednik[w]] -= ile; 
-				suma -= ile * g.koszty[w][poprzednik[w]];
+				przeplyw[w][poprzednik[w]] -= ile;
+				score.suma -= ile * g.koszty[w][poprzednik[w]];
 			}
 			else {
-				przeplyw[poprzednik[w]][w] += ile; 
-				suma += ile * g.koszty[poprzednik[w]][w];
+				przeplyw[poprzednik[w]][w] += ile;
+				score.suma += ile * g.koszty[poprzednik[w]][w];
 			}
 			w = poprzednik[w];
 		}
 	}
-	wynik score(fabryki, apteki);
-	score.suma = suma;
 	for (int i = 0; i < fabryki; i++) {
 		for (int j = 0; j < apteki; j++) {
 			score.zakupy[i][j] = przeplyw[i + 1][j + 1 + fabryki];

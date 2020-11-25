@@ -1,6 +1,7 @@
 #include "wynik.h"
 
 wynik::wynik(int fabryki, int apteki) {
+	suma = 0;
 	zakupy = new int*[fabryki];
 	koszty = new double*[fabryki];
 	for (int i = 0; i < fabryki; i++) {
