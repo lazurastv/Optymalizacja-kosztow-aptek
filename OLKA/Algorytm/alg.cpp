@@ -117,6 +117,9 @@ bool Algorytm::bellmanFord(const graf& g) {
 		
 	for (int w = 0; w < g.wezly; w++) {
 		poprzedni_dystans[w] = poprzedni_dystans[w] + dystans[w];
+		if (INF < poprzedni_dystans[w]) {
+			poprzedni_dystans[w] = INF;
+		}
 	}
 	
 	return sprawdzony[g.wezly - 1];

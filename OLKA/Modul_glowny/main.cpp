@@ -17,7 +17,9 @@ int main(int argc, char** argv) {
 		input dane = cz.dane;
 		graf gr(dane);
 		Algorytm algorytm(dane.ile_fabryk, dane.ile_aptek);
+		std::cout << "Zaczynam";
 		wynik wk = algorytm.oblicz_wynik(gr);
+		std::cout << "Done4";
 		zapiszWynik(dane, wk);
 	} catch (std::exception& err) {
 		std::cout << err.what();

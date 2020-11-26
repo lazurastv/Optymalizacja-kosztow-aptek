@@ -2,6 +2,7 @@
 #include <sstream>
 #include <string>
 #include <algorithm>
+#include <iostream>
 #include "IO.h"
 #include "input.h"
 
@@ -97,7 +98,7 @@ void Czytnik::czytajBudynki(int n) {
 
 void Czytnik::czytajHandle() {
 	int size = dane.ile_fabryk * dane.ile_aptek;
-	handel tmp[size];
+	handel* tmp = new handel[size];
 	std::string cut[4];
 	int ile = 0;
 	std::string bufor;
@@ -118,6 +119,7 @@ void Czytnik::czytajHandle() {
 	for (int i = 0; i < ile; i++) {
 		dane.handle[i] = tmp[i];
 	}
+	delete[] (tmp);
 	std::sort(dane.handle, dane.handle + dane.ile_fabryk * dane.ile_aptek);
 }
 
@@ -173,7 +175,7 @@ void zapiszWynik(input in, wynik w) {
 	string title;
 	int t = 0;
 	do {
-		title = "../Plik_wyjsciowy/Wynik_" + to_string(in.ile_fabryk) + "_" + to_string(in.ile_aptek) + "_" + to_string(t++) + ".txt";
+		title = "Plik_wyjsciowy/Wynik_" + to_string(in.ile_fabryk) + "_" + to_string(in.ile_aptek) + "_" + to_string(t++) + ".txt";
 		tmp = ifstream(title);
 	} while (tmp.good());
 	ofstream out;
