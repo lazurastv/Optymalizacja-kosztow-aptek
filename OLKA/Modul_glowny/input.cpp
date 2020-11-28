@@ -2,13 +2,20 @@
 #include <string>
 #include "input.h"
 
-#include <iostream>
-
 bool budynek::operator < (budynek a) {
 	return ID < a.ID;
 }
 
 budynek::budynek(std::string in[3]) {
+	if (in == nullptr) {
+		throw std::runtime_error("Tablica nie istnieje!\n");
+	}
+	for (int i = 0; i < 3; i++) {
+		in[i] = usunSpacje(in[i]);
+		if (in[i].empty()) {
+			throw std::runtime_error("Brakuje informacji!\n");
+		}
+	}
 	ID = naturalna(in[0]);
 	if (in[1].length() > 1000) {
 		throw std::runtime_error("Nazwa musi miec mniej niz 1000 znakow!\n");
@@ -27,9 +34,16 @@ bool handel::operator < (handel a) {
 	}
 }
 
-#include <iostream>
-
 handel::handel(std::string in[4]) {
+	if (in == nullptr) {
+		throw std::runtime_error("Tablica nie istnieje!\n");
+	}
+	for (int i = 0; i < 4; i++) {
+		in[i] = usunSpacje(in[i]);
+		if (in[i].empty()) {
+			throw std::runtime_error("Brakuje informacji!\n");
+		}
+	}
 	ID_fabryki = naturalna(in[0]);
 	ID_apteki = naturalna(in[1]);
 	limit = naturalna(in[2]);
@@ -41,11 +55,11 @@ handel::handel() {};
 int naturalna(std::string liczba) {
 	try {
 		int n = stoi(liczba);
-		if (n < 0) {
-			throw std::invalid_argument("");
+		if (nieJestNaturalna(liczba) || n < 0) {
+			throw std::exception();
 		}
 		return n;
-	} catch (std::invalid_argument err) {
+	} catch (std::exception err) {
 		throw std::runtime_error("\"" + liczba + "\" nie jest liczba naturalna!\n");
 	}
 }
@@ -53,13 +67,31 @@ int naturalna(std::string liczba) {
 double numeryczna(std::string liczba) {
 	try {
 		double n = stod(liczba);
-		if (n < 0 || nieOdpowiedniaPrecyzja(liczba)) {
-			throw std::invalid_argument("");
+		if (nieJestLiczba(liczba) || nieOdpowiedniaPrecyzja(liczba) || n < 0) {
+			throw std::exception();
 		}
 		return n;
-	} catch (std::invalid_argument err) {
+	} catch (std::exception err) {
 		throw std::runtime_error("\"" + liczba + "\" nie jest dodatnia liczba o precyzji do drugiego miejsca po przecinku!");
 	}
+}
+
+bool nieJestNaturalna(std::string num) {
+	for (char c : num) {
+		if (c < '0' || c > '9') {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool nieJestLiczba(std::string num) {
+	for (char c : num) {
+		if ((c < '0' || c > '9') && c != '.') {
+			return true;
+		}
+	}
+	return false;
 }
 
 bool nieOdpowiedniaPrecyzja(std::string num) {
@@ -74,13 +106,19 @@ bool nieOdpowiedniaPrecyzja(std::string num) {
 }
 
 std::string usunSpacje(std::string nazwa) {
-	int first = 0;
-	int last = nazwa.length() - 1;
-	while (nazwa[first] == ' ') {
-		first++;
+	int start = 0;
+	int koniec = nazwa.length() - 1;
+	int ile = nazwa.length();
+	while (nazwa[start] <= ' ' && start < nazwa.length()) {
+		start++;
+		ile--;
 	}
-	while (nazwa[last] == ' ') {
-		last--;
+	if (ile == 0) {
+		return "";
 	}
-	return nazwa.substr(first, last + 1);
+	while (nazwa[koniec] <= ' ') {
+		koniec--;
+		ile--;
+	}
+	return nazwa.substr(start, ile);
 }

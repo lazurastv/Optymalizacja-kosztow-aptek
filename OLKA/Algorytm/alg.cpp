@@ -20,10 +20,10 @@ Algorytm::Algorytm(int f, int a) {
 		}
 	}
 	poprzednik = new int[wezly];
-	poprzedni_dystans = new double[wezly];
+	potencjal = new double[wezly];
 	for (int i = 0; i < wezly; i++) {
 		poprzednik[i] = 0;
-		poprzedni_dystans[i] = 0;
+		potencjal[i] = 0;
 	}
 	sprawdzony = new bool[wezly];
 	dystans = new double[wezly + 1];
@@ -36,13 +36,19 @@ Algorytm::~Algorytm() {
 	}
 	delete[] (przeplyw);
 	delete[] (poprzednik);
-	delete[] (poprzedni_dystans);
+	delete[] (potencjal);
 	delete[] (dystans);
 }
 
 wynik Algorytm::oblicz_wynik(const graf& g) {
 	wynik score(fabryki, apteki);
+	int count = 0;
+	std::cout << "Spodziewany czas oczekiwania: " << fabryki * apteki / 2E+4 << " sekund\n";
 	while (bellmanFord(g)) {
+		if (count % 100 == 0) {
+			std::cout << count << " ";
+		}
+		count++;
         int ile = INF;
 		int w = g.wezly - 1;
         while (w != 0) {
@@ -61,11 +67,9 @@ wynik Algorytm::oblicz_wynik(const graf& g) {
         while (w != 0) {
 			if (przeplyw[w][poprzednik[w]] != 0) { 
 				przeplyw[w][poprzednik[w]] -= ile;
-				score.suma -= ile * g.koszty[w][poprzednik[w]];
 			}
 			else {
 				przeplyw[poprzednik[w]][w] += ile;
-				score.suma += ile * g.koszty[poprzednik[w]][w];
 			}
 			w = poprzednik[w];
 		}
@@ -94,14 +98,14 @@ bool Algorytm::bellmanFord(const graf& g) {
         for (int w = 0; w < g.wezly; w++) { 
 			if (!sprawdzony[w]) {
 				if (przeplyw[w][akt_wezel] != 0) {
-					double koszt = dystans[akt_wezel] + poprzedni_dystans[akt_wezel] - poprzedni_dystans[w] - g.koszty[w][akt_wezel];
+					double koszt = dystans[akt_wezel] + potencjal[akt_wezel] - potencjal[w] - g.koszty[w][akt_wezel];
 					if (koszt < dystans[w]) {
 						dystans[w] = koszt; 
 						poprzednik[w] = akt_wezel; 
 					}
 				}
 				if (przeplyw[akt_wezel][w] < g.limity[akt_wezel][w]) {
-					double koszt = dystans[akt_wezel] + poprzedni_dystans[akt_wezel] - poprzedni_dystans[w] + g.koszty[akt_wezel][w];
+					double koszt = dystans[akt_wezel] + potencjal[akt_wezel] - potencjal[w] + g.koszty[akt_wezel][w];
 					if (koszt < dystans[w]) {
 						dystans[w] = koszt;
 						poprzednik[w] = akt_wezel;
@@ -116,9 +120,9 @@ bool Algorytm::bellmanFord(const graf& g) {
 	}
 		
 	for (int w = 0; w < g.wezly; w++) {
-		poprzedni_dystans[w] = poprzedni_dystans[w] + dystans[w];
-		if (INF < poprzedni_dystans[w]) {
-			poprzedni_dystans[w] = INF;
+		potencjal[w] = potencjal[w] + dystans[w];
+		if (INF < potencjal[w]) {
+			potencjal[w] = INF;
 		}
 	}
 	

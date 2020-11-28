@@ -10,6 +10,7 @@ class Czytnik {
 	private:
 		int linijka = 1;
 		std::ifstream plik;
+		input dane;
 		void sprawdzPlik(std::string);
 		void sprawdzTytul();
 		void sprawdzID();
@@ -19,14 +20,10 @@ class Czytnik {
 		std::runtime_error bladLinia(std::string);
 	public:
 		Czytnik (const char*);
-		input dane;
+		input wczytajDane();
 };
 
 bool plikJestTekstowy(std::string);
-
-bool plikIstnieje(std::string);
-		
-bool napisJestPusty(std::string);
 
 std::string tytul(int);
 

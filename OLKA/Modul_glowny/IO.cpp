@@ -2,27 +2,33 @@
 #include <sstream>
 #include <string>
 #include <algorithm>
-#include <iostream>
+#include <filesystem>
 #include "IO.h"
 #include "input.h"
+
+namespace fs = std::filesystem;
 
 Czytnik::Czytnik (const char* in) {
 	std::string sciezka(in);
 	sprawdzPlik(sciezka);
 	plik.open(sciezka);
+}
+
+input Czytnik::wczytajDane() {
 	sprawdzTytul();
 	czytajBudynki(0);
 	czytajBudynki(1);
 	czytajHandle();
 	sprawdzID();
 	plik.close();
+	return dane;
 }
 
 void Czytnik::sprawdzPlik(std::string sciezka) {
 	if (!plikJestTekstowy(sciezka)) {
 		throw std::runtime_error("Plik \"" + sciezka + "\" nie jest tekstowy!\n");
 	}
-	if (!plikIstnieje(sciezka)) {
+	if (!fs::exists(sciezka)) {
 		throw std::runtime_error("Nie znaleziono pliku \"" + sciezka + "\"!\n");
 	}
 }
@@ -94,8 +100,6 @@ void Czytnik::czytajBudynki(int n) {
 	}
 }
 
-#include <iostream>
-
 void Czytnik::czytajHandle() {
 	int size = dane.ile_fabryk * dane.ile_aptek;
 	handel* tmp = new handel[size];
@@ -126,7 +130,7 @@ void Czytnik::czytajHandle() {
 void Czytnik::czytajLinijke(std::string bufor, std::string* cut, int ile) {
 	std::stringstream skaner(bufor);
 	for (int i = 0; i < ile; i++) {
-		if (!getline(skaner, cut[i], '|') || napisJestPusty(cut[i])) {
+		if (!getline(skaner, cut[i], '|')) {
 			throw bladLinia("Brakuje informacji!\n");
 		}
 	}
@@ -141,20 +145,6 @@ bool plikJestTekstowy(std::string sciezka) {
 	return len > 3 && sciezka.substr(len - 4, 4) == ".txt";
 }
 
-bool plikIstnieje(std::string sciezka) {
-	std::ifstream plik(sciezka);
-	return plik.good();
-}
-
-bool napisJestPusty(std::string in) {
-	for (char c : in) {
-		if (c > ' ') {
-			return false;
-		}
-	}
-	return true;
-}
-
 std::string tytul(int n) {
 	switch(n) {
 		case 0:
@@ -163,7 +153,7 @@ std::string tytul(int n) {
 			return "# Apteki (id | nazwa | dzienne zapotrzebowanie)";
 		case 2:
 			return "# Polaczenia producentow i aptek (id producenta | id apteki | "
-					"dzienna maksymalna liczba dostarczanych szczepionek | koszt szczepionki [zl] )";
+					"dzienna maksymalna liczba dostarczanych szczepionek | koszt szczepionki [zl])";
 		default:
 			return "";
 	}
@@ -174,22 +164,25 @@ void zapiszWynik(input in, wynik w) {
 	ifstream tmp;
 	string title;
 	int t = 0;
+    fs::create_directory("Plik_wyjsciowy");
 	do {
 		title = "Plik_wyjsciowy/Wynik_" + to_string(in.ile_fabryk) + "_" + to_string(in.ile_aptek) + "_" + to_string(t++) + ".txt";
 		tmp = ifstream(title);
-	} while (tmp.good());
+	} while (fs::exists(title));
 	ofstream out;
 	out.open(title);
 	out.precision(15);
+	double suma = 0;
 	for (int j = 0; j < in.ile_aptek; j++) {
 		for (int i = 0; i < in.ile_fabryk; i++) {
 			if (w.zakupy[i][j] != 0) {
 				out << in.fabryki[i].nazwa << " -> " << in.apteki[j].nazwa;
 				out << " [Koszt = " << w.zakupy[i][j] << " * " << in.handle[i * in.ile_fabryk + j].koszt;
-				out << " = " << w.koszty[i][j] << " zł]\n";
+				out << " = " << w.koszty[i][j] << " zl]\n";
+				suma += w.koszty[i][j];
 			}
 		}
 	}
-	out << "Oplaty calkowite : " << w.suma;
+	out << "Oplaty calkowite : " << suma;
 	out.close();
 }

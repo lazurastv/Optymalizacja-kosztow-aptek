@@ -34,6 +34,10 @@ int naturalna(std::string);
 
 double numeryczna(std::string);
 
+bool nieJestNaturalna(std::string);
+
+bool nieJestLiczba(std::string);
+
 bool nieOdpowiedniaPrecyzja(std::string);
 
 std::string usunSpacje(std::string);

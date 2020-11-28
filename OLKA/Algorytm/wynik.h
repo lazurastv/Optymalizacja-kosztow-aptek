@@ -4,7 +4,6 @@
 struct wynik {
 	int** zakupy;
 	double** koszty;
-	double suma;
 	wynik(int, int);
 	wynik() {};
 	~wynik();
