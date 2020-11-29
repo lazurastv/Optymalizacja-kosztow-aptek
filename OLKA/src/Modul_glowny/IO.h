@@ -20,6 +20,7 @@ class Czytnik {
 		std::runtime_error bladLinia(std::string);
 	public:
 		Czytnik (const char*);
+		~Czytnik();
 		input wczytajDane();
 };
 

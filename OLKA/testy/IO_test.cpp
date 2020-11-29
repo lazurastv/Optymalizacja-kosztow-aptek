@@ -18,7 +18,7 @@ void porownaj_handle(handel han, int ID_fabryki, int ID_apteki, int limit, doubl
 }
 
 void test_wczytajDane() {
-	Czytnik cz("txt/Test.txt");
+	Czytnik cz("../txt/Test.txt");
 	input in = cz.wczytajDane();
 	assert(in.ile_fabryk == 3);
 	assert(in.ile_aptek == 2);
@@ -86,13 +86,13 @@ void test_sprawdzPlik() {
 }
 
 void test_sprawdzID() {
-	Czytnik cz("txt/DwaID.txt");
+	Czytnik cz("../txt/DwaID.txt");
 	try {
 		input in = cz.wczytajDane();
 		assert(false);
 	} catch(std::exception err) {
 	}
-	Czytnik cz2("txt/BezLinijki.txt");
+	Czytnik cz2("../txt/BezLinijki.txt");
 	try {
 		input in = cz2.wczytajDane();
 		assert(false);

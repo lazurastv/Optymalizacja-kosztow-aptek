@@ -18,7 +18,7 @@ budynek::budynek(std::string in[3]) {
 	}
 	ID = naturalna(in[0]);
 	if (in[1].length() > 1000) {
-		throw std::runtime_error("Nazwa musi miec mniej niz 1000 znakow!\n");
+		throw std::runtime_error("Maksymalna dlugosc nazwy to 1000 znakow!\n");
 	}
 	nazwa = usunSpacje(in[1]);
 	wymog = naturalna(in[2]);
@@ -60,7 +60,7 @@ int naturalna(std::string liczba) {
 		}
 		return n;
 	} catch (std::exception err) {
-		throw std::runtime_error("\"" + liczba + "\" nie jest liczba naturalna!\n");
+		throw std::runtime_error("\"" + liczba + "\" nie jest liczba naturalna albo ma wiecej niz 9 znakow!\n");
 	}
 }
 
@@ -72,11 +72,14 @@ double numeryczna(std::string liczba) {
 		}
 		return n;
 	} catch (std::exception err) {
-		throw std::runtime_error("\"" + liczba + "\" nie jest dodatnia liczba o precyzji do drugiego miejsca po przecinku!");
+		throw std::runtime_error("\"" + liczba + "\" nie jest dodatnia liczba o precyzji do drugiego miejsca po przecinku albo ma wiecej niz 9 znakow!");
 	}
 }
 
 bool nieJestNaturalna(std::string num) {
+	if (num.length() > 9) {
+		return true;
+	}
 	for (char c : num) {
 		if (c < '0' || c > '9') {
 			return true;
@@ -86,6 +89,9 @@ bool nieJestNaturalna(std::string num) {
 }
 
 bool nieJestLiczba(std::string num) {
+	if (num.length() > 9) {
+		return true;
+	}
 	for (char c : num) {
 		if ((c < '0' || c > '9') && c != '.') {
 			return true;

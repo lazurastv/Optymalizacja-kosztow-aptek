@@ -1,22 +1,24 @@
 CXX = g++
 CXXFLAGS = -std=c++17
 RM = del
-MOD = ../OLKA/Modul_glowny/
-ALG = ../OLKA/Algorytm/
+MOD = ../src/Modul_glowny/
+ALG = ../src/Algorytm/
+BIN = bin/
+EXE = .exe
 
-all: input_test IO_test graf_test alg_test
+all: $(BIN)input_test$(EXE) $(BIN)IO_test$(EXE) $(BIN)graf_test$(EXE) $(BIN)alg_test$(EXE)
 
-input_test: input_test.cpp
-	$(CXX) input_test.cpp $(MOD)input.cpp -o bin/input_test
+$(BIN)input_test$(EXE): input_test.cpp
+	$(CXX) input_test.cpp $(MOD)input.cpp -o $(BIN)input_test
 	
-IO_test: IO_test.cpp
-	$(CXX) $(CXXFLAGS) IO_test.cpp $(MOD)IO.cpp $(MOD)input.cpp -o bin/IO_test
+$(BIN)IO_test$(EXE): IO_test.cpp
+	$(CXX) $(CXXFLAGS) IO_test.cpp $(MOD)IO.cpp $(MOD)input.cpp -o $(BIN)IO_test
 	
-graf_test: graf_test.cpp
-	$(CXX) graf_test.cpp $(ALG)graf.cpp $(MOD)input.cpp -o bin/graf_test
+$(BIN)graf_test$(EXE): graf_test.cpp
+	$(CXX) graf_test.cpp $(ALG)graf.cpp $(MOD)input.cpp -o $(BIN)graf_test
 	
-alg_test: alg_test.cpp
-	$(CXX) alg_test.cpp $(ALG)alg.cpp $(ALG)graf.cpp $(ALG)wynik.cpp -o bin/alg_test
+$(BIN)alg_test$(EXE): alg_test.cpp
+	$(CXX) alg_test.cpp $(ALG)alg.cpp $(ALG)graf.cpp $(ALG)wynik.cpp -o $(BIN)alg_test
 	
 clean:
 	$(RM) bin

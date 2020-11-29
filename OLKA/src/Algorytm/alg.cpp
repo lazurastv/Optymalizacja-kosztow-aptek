@@ -7,7 +7,6 @@
 
 #define INF INT_MAX
 
-
 Algorytm::Algorytm(int f, int a) {
 	fabryki = f;
 	apteki = a;
@@ -41,7 +40,6 @@ Algorytm::~Algorytm() {
 }
 
 wynik Algorytm::obliczWynik(const graf& g) {
-	wynik score(fabryki, apteki);
 	int count = 0;
 	std::cout << "Gorne ograniczenie iteracji: " << fabryki * apteki << std::endl;
 	while (bellmanFord(g)) {
@@ -74,6 +72,7 @@ wynik Algorytm::obliczWynik(const graf& g) {
 			w = poprzednik[w];
 		}
 	}
+	wynik score(fabryki, apteki);
 	for (int i = 0; i < fabryki; i++) {
 		for (int j = 0; j < apteki; j++) {
 			score.zakupy[i][j] = przeplyw[i + 1][j + 1 + fabryki];

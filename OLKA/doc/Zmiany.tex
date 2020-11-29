@@ -1,0 +1,43 @@
+\documentclass{article}
+
+\usepackage{polski}
+
+\title{Wprowadzone zmiany}
+\date{29.11.2020}
+\author{Dominik Wawrzyniuk}
+
+\begin{document}
+
+\maketitle
+
+\section{Zmiany}
+
+\begin{enumerate}
+	\item Zamiast tworzyć oddzielne kontenery na budynki i handle, powstał kontener wskaźników na ich tablice
+	\item Sortowanie jest wykonywane po przeczytaniu wszystkich danych
+	\item Czytnik pliku został zapisany we własnej klasie
+	\item Pozbyto się plików conv, przenosząc ich funkcjonalność na konstruktor grafu
+	\item Zamieniono typ float w kosztach na typ double
+	\item Struktura wynik nie przechowuje sumy
+	\item Algorytm został zapisany we własnej klasie, pozbyto się funkcji aktualizujWynik
+	\item Zmieniono strukturę katalogów
+	\item Zamiast zapisywać plik do ustalonego folderu, program sam ten folder tworzy
+\end{enumerate}
+
+\newpage{}
+
+\section{Powody zmian}
+
+\begin{enumerate}
+	\item Jest to skuteczniejsze rozwiązanie i unika tworzenia dwóch bardzo podobnych klas
+	\item Sortowanie podczas wstawiania jest wolniejsze niż posortowanie wszystkich wartości naraz
+	\item Pozwala to na wewnętrzne przechowywanie różnych używanych zmiennych, m. in. czytanej linijki lub pliku
+	\item Jest to prostsze rozwiązanie, a im mniej plików, tym lepiej
+	\item Więcej liczb o precyzji dwóch miejsc po przecinku można przedstawić dokładnie typem double niż typem float
+	\item Nie ma potrzeby żeby przechowywała, skuteczniej jest obliczyć sumę kosztów zakupów
+	\item Pozwala to na przechowywanie stanu rozwiązania w klasie, umożliwiając wygodną modyfikację rozwiązania
+	\item Poprawia ona czytelność i jest dostosowana do standardowych struktur katalogowych języków C/C++
+	\item Pozwala to na uruchamianie programu gdziekolwiek, nie tylko w folderze projektu
+\end{enumerate}
+
+\end{document}

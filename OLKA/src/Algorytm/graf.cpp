@@ -3,7 +3,7 @@
 #include "../Modul_glowny/input.h"
 #include <iostream>
 
-graf::graf(input in) {
+graf::graf(const input& in) {
 	if (in.fabryki == nullptr || in.apteki == nullptr || in.handle == nullptr) {
 		throw std::runtime_error("Nieprawidlowy input!\n");
 	}

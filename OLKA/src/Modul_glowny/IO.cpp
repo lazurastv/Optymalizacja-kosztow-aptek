@@ -14,13 +14,16 @@ Czytnik::Czytnik (const char* in) {
 	plik.open(sciezka);
 }
 
+Czytnik::~Czytnik() {
+	plik.close();
+}
+
 input Czytnik::wczytajDane() {
 	sprawdzTytul();
 	czytajBudynki(0);
 	czytajBudynki(1);
 	czytajHandle();
 	sprawdzID();
-	plik.close();
 	return dane;
 }
 
@@ -64,18 +67,25 @@ void Czytnik::sprawdzID() {
 }
 
 void Czytnik::czytajBudynki(int n) {
-	budynek tmp[1000];
+	budynek* budynki = new budynek[1000];
 	std::string cut[3];
 	int ile = 0;
 	std::string bufor;
-	while (getline(plik, bufor) && bufor != tytul(n + 1)) {
-		czytajLinijke(bufor, cut, 3);
-		try {
-			tmp[ile++] = budynek(cut);
-		} catch (std::runtime_error err) {
-			throw bladLinia(err.what());
+	try {
+		while (getline(plik, bufor) && bufor != tytul(n + 1)) {
+			czytajLinijke(bufor, cut, 3);
+			if (ile > 1000) {
+				throw std::runtime_error("Liczba " + std::string(n == 0 ? "fabryk" : "aptek") + " nie moze byc wieksza od 1000!\n");
+			}
+			try {
+				budynki[ile++] = budynek(cut);
+			} catch (std::runtime_error err) {
+				throw bladLinia(err.what());
+			}
+			linijka++;
 		}
-		linijka++;
+	} catch (std::length_error err) {
+		throw bladLinia("Jest zbyt dluga!\n");
 	}
 	linijka++;
 	if (bufor != tytul(n + 1)) {
@@ -85,7 +95,7 @@ void Czytnik::czytajBudynki(int n) {
 		case 0:
 			dane.fabryki = new budynek[ile];
 			for (int i = 0; i < ile; i++) {
-				dane.fabryki[i] = tmp[i];
+				dane.fabryki[i] = budynki[i];
 			}
 			dane.ile_fabryk = ile;
 			std::sort(dane.fabryki, dane.fabryki + ile);
@@ -93,27 +103,32 @@ void Czytnik::czytajBudynki(int n) {
 		case 1:
 			dane.apteki = new budynek[ile];
 			for (int i = 0; i < ile; i++) {
-				dane.apteki[i] = tmp[i];
+				dane.apteki[i] = budynki[i];
 			}
 			dane.ile_aptek = ile;
 			std::sort(dane.apteki, dane.apteki + ile);
 	}
+	delete[] (budynki);
 }
 
 void Czytnik::czytajHandle() {
 	int size = dane.ile_fabryk * dane.ile_aptek;
-	handel* tmp = new handel[size];
+	handel* handle = new handel[size];
 	std::string cut[4];
 	int ile = 0;
 	std::string bufor;
-	while (getline(plik, bufor) && ile <= size) {
-		czytajLinijke(bufor, cut, 4);
-		try {
-			tmp[ile++] = handel(cut);
-		} catch (std::runtime_error err) {
-			throw bladLinia(err.what());
+	try {
+		while (getline(plik, bufor) && ile <= size) {
+			czytajLinijke(bufor, cut, 4);
+			try {
+				handle[ile++] = handel(cut);
+			} catch (std::runtime_error err) {
+				throw bladLinia(err.what());
+			}
+			linijka++;
 		}
-		linijka++;
+	} catch (std::length_error err) {
+		throw bladLinia("Jest zbyt dluga!\n");
 	}
 	linijka++;
 	if (ile != size) {
@@ -121,10 +136,10 @@ void Czytnik::czytajHandle() {
 	}
 	dane.handle = new handel[ile];
 	for (int i = 0; i < ile; i++) {
-		dane.handle[i] = tmp[i];
+		dane.handle[i] = handle[i];
 	}
-	delete[] (tmp);
 	std::sort(dane.handle, dane.handle + dane.ile_fabryk * dane.ile_aptek);
+	delete[] (handle);
 }
 
 void Czytnik::czytajLinijke(std::string bufor, std::string* cut, int ile) {

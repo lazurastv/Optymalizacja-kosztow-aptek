@@ -25,6 +25,9 @@ void test_zle_ID_budynek() {
 				cut[0] = "5.7";
 				break;
 			case 2:
+				cut[0] = "123456789101112";
+				break;
+			case 3:
 				cut[0] = "    ";
 		}
 		try {

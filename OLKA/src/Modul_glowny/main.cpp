@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
 		if (argc < 2) {
 			throw std::runtime_error("Nie podano pliku wejściowego!\n");
 		}
-		Czytnik cz = Czytnik(argv[1]);
+		Czytnik cz(argv[1]);
 		std::cout << "Wczytywanie danych...\n";
 		input dane = cz.wczytajDane();
 		graf gr(dane);
