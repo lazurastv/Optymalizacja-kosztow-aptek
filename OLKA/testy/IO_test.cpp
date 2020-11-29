@@ -1,8 +1,8 @@
 #include <cassert>
 #include <string>
 #include <iostream>
-#include "../OLKA/Modul_glowny/IO.h"
-#include "../OLKA/Modul_glowny/input.h"
+#include "../src/Modul_glowny/IO.h"
+#include "../src/Modul_glowny/input.h"
 
 void porownaj_budynki(budynek bud, int ID, std::string nazwa, int wymog) {
 	assert(bud.ID == ID);

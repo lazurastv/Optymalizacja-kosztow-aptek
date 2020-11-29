@@ -1,8 +1,8 @@
 #include <cassert>
 #include <string>
 #include <iostream>
-#include "../OLKA/Modul_glowny/input.h"
-#include "../OLKA/Algorytm/graf.h"
+#include "../src/Modul_glowny/input.h"
+#include "../src/Algorytm/graf.h"
 
 budynek pseudo_budynek(int ID, std::string nazwa, int wymog) {
 	budynek tmp;

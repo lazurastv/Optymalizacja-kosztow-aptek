@@ -1,4 +1,5 @@
 #include <climits>
+#include <iostream>
 #include "../Modul_glowny/input.h"
 #include "alg.h"
 #include "graf.h"
@@ -6,7 +7,6 @@
 
 #define INF INT_MAX
 
-#include <iostream>
 
 Algorytm::Algorytm(int f, int a) {
 	fabryki = f;
@@ -40,10 +40,10 @@ Algorytm::~Algorytm() {
 	delete[] (dystans);
 }
 
-wynik Algorytm::oblicz_wynik(const graf& g) {
+wynik Algorytm::obliczWynik(const graf& g) {
 	wynik score(fabryki, apteki);
 	int count = 0;
-	std::cout << "Spodziewany czas oczekiwania: " << fabryki * apteki / 2E+4 << " sekund\n";
+	std::cout << "Gorne ograniczenie iteracji: " << fabryki * apteki << std::endl;
 	while (bellmanFord(g)) {
 		if (count % 100 == 0) {
 			std::cout << count << " ";
@@ -97,19 +97,19 @@ bool Algorytm::bellmanFord(const graf& g) {
   
         for (int w = 0; w < g.wezly; w++) { 
 			if (!sprawdzony[w]) {
-				if (przeplyw[w][akt_wezel] != 0) {
-					double koszt = dystans[akt_wezel] + potencjal[akt_wezel] - potencjal[w] - g.koszty[w][akt_wezel];
-					if (koszt < dystans[w]) {
-						dystans[w] = koszt; 
-						poprzednik[w] = akt_wezel; 
-					}
-				}
 				if (przeplyw[akt_wezel][w] < g.limity[akt_wezel][w]) {
 					double koszt = dystans[akt_wezel] + potencjal[akt_wezel] - potencjal[w] + g.koszty[akt_wezel][w];
 					if (koszt < dystans[w]) {
 						dystans[w] = koszt;
 						poprzednik[w] = akt_wezel;
 					} 
+				}
+				if (przeplyw[w][akt_wezel] != 0) {
+					double koszt = dystans[akt_wezel] + potencjal[akt_wezel] - potencjal[w] - g.koszty[w][akt_wezel];
+					if (koszt < dystans[w]) {
+						dystans[w] = koszt; 
+						poprzednik[w] = akt_wezel; 
+					}
 				}
 				if (dystans[w] < dystans[najlepszy]) {
 					najlepszy = w;
@@ -120,7 +120,7 @@ bool Algorytm::bellmanFord(const graf& g) {
 	}
 		
 	for (int w = 0; w < g.wezly; w++) {
-		potencjal[w] = potencjal[w] + dystans[w];
+		potencjal[w] += dystans[w];
 		if (INF < potencjal[w]) {
 			potencjal[w] = INF;
 		}

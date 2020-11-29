@@ -2,7 +2,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-#include "../OLKA/Modul_glowny/input.h"
+#include "../src/Modul_glowny/input.h"
 
 void test_dobry_budynek() {
 	std::string cut[3] = {"5", "\t Jacek z.o.o. ! \n", "150"};

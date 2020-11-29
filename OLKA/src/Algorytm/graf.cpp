@@ -32,6 +32,8 @@ graf::graf(input in) {
 	}
 }
 
+graf::graf() {}
+
 graf::~graf() {
 	for (int i = 0; i < wezly; i++) {
 		delete[] (limity[i]);

@@ -15,11 +15,10 @@ class Algorytm {
 		double* potencjal;
 		double* dystans;
 		bool bellmanFord(const graf&);
-		void usun_cykle(const graf&);
 	public:
 		Algorytm(int, int);
 		~Algorytm();
-		wynik oblicz_wynik(const graf&);
+		wynik obliczWynik(const graf&);
 };
 
 

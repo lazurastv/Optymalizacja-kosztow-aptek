@@ -8,7 +8,7 @@ struct graf {
 	int** limity;
 	double** koszty;
 	graf(input);
-	graf() {};
+	graf();
 	~graf();
 };
 

@@ -1,7 +1,7 @@
 CC = g++
 RM = del
-ALG = Algorytm/
-MOD = Modul_glowny/
+ALG = src/Algorytm/
+MOD = src/Modul_glowny/
 O = object/
 
 main: $(MOD)main.cpp $(O)input.o $(O)IO.o $(O)alg.o $(O)graf.o $(O)wynik.o

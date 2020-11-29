@@ -177,7 +177,7 @@ void zapiszWynik(input in, wynik w) {
 		for (int i = 0; i < in.ile_fabryk; i++) {
 			if (w.zakupy[i][j] != 0) {
 				out << in.fabryki[i].nazwa << " -> " << in.apteki[j].nazwa;
-				out << " [Koszt = " << w.zakupy[i][j] << " * " << in.handle[i * in.ile_fabryk + j].koszt;
+				out << " [Koszt = " << w.zakupy[i][j] << " * " << in.handle[i * in.ile_aptek + j].koszt;
 				out << " = " << w.koszty[i][j] << " zl]\n";
 				suma += w.koszty[i][j];
 			}
