@@ -7,30 +7,30 @@
 
 #define INF INT_MAX
 
-Algorytm::Algorytm(int f, int a) {
-	fabryki = f;
-	apteki = a;
-	int wezly = 2 + fabryki + apteki;
-	przeplyw = new int*[wezly];
-	for (int i = 0; i < wezly; i++) {
-		przeplyw[i] = new int[wezly];
-		for (int j = 0; j < wezly; j++) {
+Algorytm::Algorytm(const input& in) {
+	g = graf(in);
+	fabryki = in.ile_fabryk;
+	apteki = in.ile_aptek;
+	przeplyw = new int*[g.wezly];
+	for (int i = 0; i < g.wezly; i++) {
+		przeplyw[i] = new int[g.wezly];
+		for (int j = 0; j < g.wezly; j++) {
 			przeplyw[i][j] = 0;
 		}
 	}
-	poprzednik = new int[wezly];
-	potencjal = new double[wezly];
-	for (int i = 0; i < wezly; i++) {
+	poprzednik = new int[g.wezly];
+	potencjal = new double[g.wezly];
+	for (int i = 0; i < g.wezly; i++) {
 		poprzednik[i] = 0;
 		potencjal[i] = 0;
 	}
-	sprawdzony = new bool[wezly];
-	dystans = new double[wezly + 1];
+	sprawdzony = new bool[g.wezly];
+	dystans = new double[g.wezly + 1];
 }
 
 Algorytm::~Algorytm() {
 	delete[] (sprawdzony);
-	for (int i = 0; i < 2 + fabryki + apteki; i++) {
+	for (int i = 0; i < g.wezly; i++) {
 		delete[] (przeplyw[i]);
 	}
 	delete[] (przeplyw);
@@ -39,10 +39,10 @@ Algorytm::~Algorytm() {
 	delete[] (dystans);
 }
 
-wynik Algorytm::obliczWynik(const graf& g) {
+wynik Algorytm::obliczWynik() {
 	int count = 0;
 	std::cout << "Gorne ograniczenie iteracji: " << fabryki * apteki << std::endl;
-	while (bellmanFord(g)) {
+	while (bellmanFord()) {
 		if (count % 100 == 0) {
 			std::cout << count << " ";
 		}
@@ -82,7 +82,7 @@ wynik Algorytm::obliczWynik(const graf& g) {
 	return score;
 }
 
-bool Algorytm::bellmanFord(const graf& g) {
+bool Algorytm::bellmanFord() {
 	int akt_wezel = 0;
 	for (int i = 0; i < g.wezly; i++) {
 		sprawdzony[i] = false;

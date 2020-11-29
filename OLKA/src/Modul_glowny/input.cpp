@@ -52,7 +52,34 @@ handel::handel(std::string in[4]) {
 
 handel::handel() {}
 
-input::input() {}
+input::input(const input& in) {
+	ile_fabryk = in.ile_fabryk;
+	ile_aptek = in.ile_aptek;
+	fabryki = new budynek[ile_fabryk];
+	apteki = new budynek[ile_aptek];
+	handle = new handel[ile_fabryk * ile_aptek];
+	for (int i = 0; i < ile_fabryk; i++) {
+		fabryki[i] = in.fabryki[i];
+	}
+	for (int i = 0; i < ile_aptek; i++) {
+		apteki[i] = in.apteki[i];
+	}
+	for (int i = 0; i < ile_fabryk * ile_aptek; i++) {
+		handle[i] = in.handle[i];
+	}
+}
+
+input::input() {
+	fabryki = nullptr;
+	apteki = nullptr;
+	handle = nullptr;
+}
+
+input::~input() {
+	delete[] (fabryki);
+	delete[] (apteki);
+	delete[] (handle);
+}
 
 int naturalna(std::string liczba) {
 	try {

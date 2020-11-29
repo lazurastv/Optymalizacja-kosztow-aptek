@@ -22,12 +22,12 @@ class Czytnik {
 		Czytnik (const char*);
 		~Czytnik();
 		input wczytajDane();
+		void zapiszWynik(const wynik&);
 };
 
 bool plikJestTekstowy(std::string);
 
 std::string tytul(int);
 
-void zapiszWynik(input, wynik);
 
 #endif

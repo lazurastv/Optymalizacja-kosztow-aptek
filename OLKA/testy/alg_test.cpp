@@ -1,52 +1,97 @@
 #include <cassert>
 #include <iostream>
-#include "../src/Algorytm/graf.h"
+#include "../src/Modul_glowny/input.h"
 #include "../src/Algorytm/alg.h"
 #include "../src/Algorytm/wynik.h"
 
 void test_obliczWynik() {
-	graf g;
-	g.wezly = 8;
-	g.limity = new int*[8];
-	g.koszty = new double*[8];
-	for (int i = 0; i < 8; i++) {
-		g.limity[i] = new int[8];
-		g.koszty[i] = new double[8];
-		for (int j = 0; j < 8; j++) {
-			g.limity[i][j] = 0;
-			g.koszty[i][j] = 0;
+	input in;
+	in.fabryki = new budynek[3];
+	in.apteki = new budynek[3];
+	in.handle = new handel[9];
+	in.ile_fabryk = 3;
+	in.ile_aptek = 3;
+	
+	budynek* b;
+	for (int i = 0; i < 6; i++) {
+		if (i < 3) {
+			b = &in.fabryki[i];
+		} else {
+			b = &in.apteki[i - 3];
+		}
+		b->ID = i;
+		b->nazwa = "test";
+		switch (i) {
+			case 0:	
+				b->wymog = 900;
+				break;
+			case 1:
+				b->wymog = 1300;
+				break;
+			case 2:
+				b->wymog = 1100;
+				break;
+			case 3:
+				b->wymog = 450;
+				break;
+			case 4:
+				b->wymog = 690;
+				break;
+			case 5:
+				b->wymog = 1200;
 		}
 	}
-	g.limity[0][1] = 900;
-	g.limity[0][2] = 1300;
-	g.limity[0][3] = 1100;
-	g.limity[4][7] = 450;
-	g.limity[5][7] = 690;
-	g.limity[6][7] = 1200;
+	delete (b);
 	
-	g.limity[1][4] = 800;
-	g.koszty[1][4] = 70.5;
-	g.limity[2][4] = 900;
-	g.koszty[2][4] = 100;
-	g.limity[3][4] = 900;
-	g.koszty[3][4] = 80;
+	handel* h;
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			h = &in.handle[i * 3 + j];
+			h->ID_fabryki = i;
+			h->ID_apteki = j;
+			switch (i * 3 + j) {
+				case 0:	
+					h->limit = 800;
+					h->koszt = 70.5;
+					break;
+				case 1:	
+					h->limit = 600;
+					h->koszt = 70;
+					break;
+				case 2:	
+					h->limit = 750;
+					h->koszt = 90.99;
+					break;
+				case 3:	
+					h->limit = 900;
+					h->koszt = 100;
+					break;
+				case 4:	
+					h->limit = 600;
+					h->koszt = 80;
+					break;
+				case 5:	
+					h->limit = 450;
+					h->koszt = 70;
+					break;
+				case 6:	
+					h->limit = 900;
+					h->koszt = 80;
+					break;
+				case 7:	
+					h->limit = 900;
+					h->koszt = 90;
+					break;
+				case 8:	
+					h->limit = 300;
+					h->koszt = 100;
+			}
+		}
+	}
+	delete (h);
 	
-	g.limity[1][5] = 600;
-	g.koszty[1][5] = 70;
-	g.limity[2][5] = 600;
-	g.koszty[2][5] = 80;
-	g.limity[3][5] = 900;
-	g.koszty[3][5] = 90;
-	
-	g.limity[1][6] = 750;
-	g.koszty[1][6] = 90.99;
-	g.limity[2][6] = 450;
-	g.koszty[2][6] = 70;
-	g.limity[3][6] = 300;
-	g.koszty[3][6] = 100;
-	
-	Algorytm alg(3, 3);
-	wynik w = alg.obliczWynik(g);
+	Algorytm alg(in);
+	wynik w = alg.obliczWynik();
 	
 	assert(0 == w.zakupy[0][0]);
 	assert(450 == w.zakupy[0][1]);

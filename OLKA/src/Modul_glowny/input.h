@@ -28,7 +28,9 @@ struct input {
 	int ile_fabryk;
 	int ile_aptek;
 	handel* handle;
+	input(const input&);
 	input();
+	~input();
 };
 
 int naturalna(std::string);

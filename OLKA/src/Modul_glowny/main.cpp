@@ -13,16 +13,12 @@ int main(int argc, char** argv) {
 		Czytnik cz(argv[1]);
 		std::cout << "Wczytywanie danych...\n";
 		input dane = cz.wczytajDane();
-		graf gr(dane);
-		Algorytm algorytm(dane.ile_fabryk, dane.ile_aptek);
+		Algorytm algorytm(dane);
 		std::cout << "Obliczenia...\n";
-		wynik wk = algorytm.obliczWynik(gr);
+		wynik wk = algorytm.obliczWynik();
 		std::cout << "\nZapisywanie wyniku...\n";
-		zapiszWynik(dane, wk);
+		cz.zapiszWynik(wk);
 		std::cout << "Koncze dzialanie.\n";
-		delete[] (dane.fabryki);
-		delete[] (dane.apteki);
-		delete[] (dane.handle);
 	} catch (std::exception& err) {
 		std::cerr << err.what();
 	}

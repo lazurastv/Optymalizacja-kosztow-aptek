@@ -9,6 +9,7 @@ struct graf {
 	double** koszty;
 	graf(const input&);
 	graf();
+	graf& operator=(const graf&);
 	~graf();
 };
 

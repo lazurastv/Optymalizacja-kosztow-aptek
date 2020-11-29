@@ -4,8 +4,10 @@
 struct wynik {
 	int** zakupy;
 	double** koszty;
-	int ile;
+	int fabryki;
+	int apteki;
 	wynik(int, int);
+	wynik(const wynik&);
 	wynik();
 	~wynik();
 };

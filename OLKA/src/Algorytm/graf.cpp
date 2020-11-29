@@ -31,7 +31,27 @@ graf::graf(const input& in) {
 	}
 }
 
-graf::graf() {}
+#include <iostream>
+
+graf& graf::operator=(const graf& g) {
+	wezly = g.wezly;
+	limity = new int*[wezly];
+	koszty = new double*[wezly];
+	for (int i = 0; i < wezly; i++) {
+		limity[i] = new int[wezly];
+		koszty[i] = new double[wezly];
+		for (int j = 0; j < wezly; j++) {
+			limity[i][j] = g.limity[i][j];
+			koszty[i][j] = g.koszty[i][j];
+		}
+	}
+	return *this;
+}
+
+graf::graf() {
+	limity = nullptr;
+	koszty = nullptr;
+}
 
 graf::~graf() {
 	for (int i = 0; i < wezly; i++) {

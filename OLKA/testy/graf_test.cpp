@@ -34,17 +34,16 @@ void test_dobry_input() {
 	input in;
 	in.ile_fabryk = 2;
 	in.ile_aptek = 1;
-	budynek fabryki[2];
-	budynek apteki[1];
-	handel handle[2];
-	fabryki[0] = pseudo_budynek(5, "Farma co.", 400);
-	fabryki[1] = pseudo_budynek(8, "Nom", 340);
-	apteki[0] = pseudo_budynek(3, "Odbiorca", 740);
-	handle[0] = pseudo_handel(5, 3, 500, 50.76);
-	handle[1] = pseudo_handel(8, 3, 400, 49.98);
-	in.fabryki = fabryki;
-	in.apteki = apteki;
-	in.handle = handle;
+	in.fabryki = new budynek[2];
+	in.apteki = new budynek[1];
+	in.handle = new handel[2];
+	
+	in.fabryki[0] = pseudo_budynek(5, "Farma co.", 400);
+	in.fabryki[1] = pseudo_budynek(8, "Nom", 340);
+	in.apteki[0] = pseudo_budynek(3, "Odbiorca", 740);
+	in.handle[0] = pseudo_handel(5, 3, 500, 50.76);
+	in.handle[1] = pseudo_handel(8, 3, 400, 49.98);
+	
 	graf g(in);
 	assert(5 == g.wezly);
 	int** limity = new int*[5];
@@ -64,6 +63,7 @@ void test_dobry_input() {
 	koszty[1][3] = 50.76;
 	limity[2][3] = 400;
 	koszty[2][3] = 49.98;
+	
 	for (int i = 0; i < g.wezly; i++) {
 		for (int j = 0; j < g.wezly; j++) {
 			assert(limity[i][j] == g.limity[i][j]);

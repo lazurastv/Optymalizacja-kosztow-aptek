@@ -16,7 +16,9 @@ Czytnik::Czytnik (const char* in) {
 }
 
 Czytnik::~Czytnik() {
-	plik.close();
+	if (plik.is_open()) {
+		plik.close();
+	}
 }
 
 input Czytnik::wczytajDane() {
@@ -175,25 +177,25 @@ std::string tytul(int n) {
 	}
 }
 
-void zapiszWynik(input in, wynik w) {
+void Czytnik::zapiszWynik(const wynik& w) {
 	using namespace std;
 	ifstream tmp;
 	string title;
 	int t = 0;
     fs::create_directory("Plik_wyjsciowy");
 	do {
-		title = "Plik_wyjsciowy/Wynik_" + to_string(in.ile_fabryk) + "_" + to_string(in.ile_aptek) + "_" + to_string(t++) + ".txt";
+		title = "Plik_wyjsciowy/Wynik_" + to_string(dane.ile_fabryk) + "_" + to_string(dane.ile_aptek) + "_" + to_string(t++) + ".txt";
 		tmp = ifstream(title);
 	} while (fs::exists(title));
 	ofstream out;
 	out.open(title);
 	out.precision(15);
 	double suma = 0;
-	for (int j = 0; j < in.ile_aptek; j++) {
-		for (int i = 0; i < in.ile_fabryk; i++) {
+	for (int j = 0; j < dane.ile_aptek; j++) {
+		for (int i = 0; i < dane.ile_fabryk; i++) {
 			if (w.zakupy[i][j] != 0) {
-				out << in.fabryki[i].nazwa << " -> " << in.apteki[j].nazwa;
-				out << " [Koszt = " << w.zakupy[i][j] << " * " << in.handle[i * in.ile_aptek + j].koszt;
+				out << dane.fabryki[i].nazwa << " -> " << dane.apteki[j].nazwa;
+				out << " [Koszt = " << w.zakupy[i][j] << " * " << dane.handle[i * dane.ile_aptek + j].koszt;
 				out << " = " << w.koszty[i][j] << " zl]\n";
 				suma += w.koszty[i][j];
 			}

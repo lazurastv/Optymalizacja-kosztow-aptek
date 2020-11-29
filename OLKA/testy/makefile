@@ -18,7 +18,7 @@ $(BIN)graf_test$(EXE): graf_test.cpp
 	$(CXX) graf_test.cpp $(ALG)graf.cpp $(MOD)input.cpp -o $(BIN)graf_test
 	
 $(BIN)alg_test$(EXE): alg_test.cpp
-	$(CXX) alg_test.cpp $(ALG)alg.cpp $(ALG)graf.cpp $(ALG)wynik.cpp -o $(BIN)alg_test
+	$(CXX) alg_test.cpp $(ALG)alg.cpp $(ALG)graf.cpp $(MOD)input.cpp $(ALG)wynik.cpp -o $(BIN)alg_test
 	
 clean:
 	$(RM) bin

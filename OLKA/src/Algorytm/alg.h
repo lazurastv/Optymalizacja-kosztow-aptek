@@ -14,11 +14,12 @@ class Algorytm {
 		int* poprzednik;
 		double* potencjal;
 		double* dystans;
-		bool bellmanFord(const graf&);
+		graf g;
+		bool bellmanFord();
 	public:
-		Algorytm(int, int);
+		Algorytm(const input&);
 		~Algorytm();
-		wynik obliczWynik(const graf&);
+		wynik obliczWynik();
 };
 
 
