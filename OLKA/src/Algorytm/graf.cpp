@@ -31,8 +31,6 @@ graf::graf(const input& in) {
 	}
 }
 
-#include <iostream>
-
 graf& graf::operator=(const graf& g) {
 	wezly = g.wezly;
 	limity = new int*[wezly];

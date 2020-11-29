@@ -2,7 +2,6 @@
 #include "input.h"
 #include "IO.h"
 #include "../Algorytm/alg.h"
-#include "../Algorytm/graf.h"
 #include "../Algorytm/wynik.h"
 
 int main(int argc, char** argv) {
