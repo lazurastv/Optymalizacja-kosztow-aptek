@@ -5,6 +5,7 @@
 #include <filesystem>
 #include "IO.h"
 #include "input.h"
+#include "../Algorytm/wynik.h"
 
 namespace fs = std::filesystem;
 

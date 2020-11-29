@@ -3,6 +3,7 @@
 wynik::wynik(int fabryki, int apteki) {
 	zakupy = new int*[fabryki];
 	koszty = new double*[fabryki];
+	ile = fabryki;
 	for (int i = 0; i < fabryki; i++) {
 		zakupy[i] = new int[apteki];
 		koszty[i] = new double[apteki];
@@ -13,8 +14,9 @@ wynik::wynik(int fabryki, int apteki) {
 	}
 }
 
+wynik::wynik() {}
+
 wynik::~wynik() {
-	int ile = sizeof (zakupy) / sizeof (int*);
 	for (int i = 0; i < ile; i++) {
 		delete[] (zakupy[i]);
 		delete[] (koszty[i]);

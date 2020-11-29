@@ -20,6 +20,9 @@ int main(int argc, char** argv) {
 		std::cout << "\nZapisywanie wyniku...\n";
 		zapiszWynik(dane, wk);
 		std::cout << "Koncze dzialanie.\n";
+		delete[] (dane.fabryki);
+		delete[] (dane.apteki);
+		delete[] (dane.handle);
 	} catch (std::exception& err) {
 		std::cerr << err.what();
 	}

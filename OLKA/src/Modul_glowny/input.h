@@ -8,7 +8,7 @@ struct budynek {
 	std::string nazwa;
 	int wymog;
 	bool operator < (budynek);
-	budynek(std::string*);
+	budynek(std::string[]);
 	budynek();
 };
 
@@ -18,7 +18,7 @@ struct handel {
 	int limit;
 	double koszt;
 	bool operator < (handel);
-	handel(std::string*);
+	handel(std::string[]);
 	handel();
 };
 
@@ -28,6 +28,7 @@ struct input {
 	int ile_fabryk;
 	int ile_aptek;
 	handel* handle;
+	input();
 };
 
 int naturalna(std::string);

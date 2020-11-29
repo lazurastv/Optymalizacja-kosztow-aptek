@@ -88,13 +88,13 @@ void test_sprawdzPlik() {
 void test_sprawdzID() {
 	Czytnik cz("../txt/DwaID.txt");
 	try {
-		input in = cz.wczytajDane();
+		cz.wczytajDane();
 		assert(false);
 	} catch(std::exception err) {
 	}
 	Czytnik cz2("../txt/BezLinijki.txt");
 	try {
-		input in = cz2.wczytajDane();
+		cz2.wczytajDane();
 		assert(false);
 	} catch (std::exception err) {
 	}

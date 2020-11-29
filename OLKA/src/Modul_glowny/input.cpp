@@ -24,7 +24,7 @@ budynek::budynek(std::string in[3]) {
 	wymog = naturalna(in[2]);
 }
 
-budynek::budynek() {};
+budynek::budynek() {}
 
 bool handel::operator < (handel a) {
 	if (ID_fabryki == a.ID_fabryki) {
@@ -50,7 +50,9 @@ handel::handel(std::string in[4]) {
 	koszt = numeryczna(in[3]);
 }
 
-handel::handel() {};
+handel::handel() {}
+
+input::input() {}
 
 int naturalna(std::string liczba) {
 	try {

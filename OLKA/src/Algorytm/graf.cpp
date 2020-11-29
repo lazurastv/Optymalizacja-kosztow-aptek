@@ -1,7 +1,6 @@
 #include <stdexcept>
 #include "graf.h"
 #include "../Modul_glowny/input.h"
-#include <iostream>
 
 graf::graf(const input& in) {
 	if (in.fabryki == nullptr || in.apteki == nullptr || in.handle == nullptr) {
